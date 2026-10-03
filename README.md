@@ -18,11 +18,17 @@ Sales_Transactions — سجل المعاملات البيعية
 
 تم التعامل مع كل عمود حسب طبيعته، باستخدام أكثر من أسلوب تنظيف لإظهار تنوع الأدوات:
 
-Product_Details → price المشكلة: قيم مفقودة (NULL) القرار: تُركت NULL — لا يوجد بديل موثوق للتعويض
+
+Product_Details → price المشكلة: قيم مفقودة (NULL) القرار: تُركتNULL — لا يوجد بديل موثوق للتعويض
+
 Customer_Demographics → age المشكلة: نصوص مثل "thirty-five" + NULL القرار: تحويل النصوص إلى NULL عبر GLOB، ثم تعويض بالـ Mean
+
 Customer_Demographics → loyalty_program المشكلة: نص 'nan' + NULL القرار: تُركت NULL — القيم (Yes/No) متقاربة جداً (33/32)، لا أساس إحصائي للتعويض
+
 Sales_Transactions → quantity المشكلة: نص "three" + NULL القرار: تحويل النص إلى رقم، وحذف صفوف NULL (17 صف)
+
 Sales_Transactions → employee_id المشكلة: NULL القرار: حذف الصفوف (5 صفوف)
+
 Sales_Transactions → total_amount المشكلة: NULL القرار: حُذفت (11 صف) بعد اكتشاف أن حساب price × quantity غير موثوق
 
 ⚠️ اكتشاف مهم: تبيّن أن عمود product_id في جدول Product_Details ليس معرّفاً فريداً — نفس الرقم يمثل عدة منتجات مختلفة تماماً (بأسعار وفئات مختلفة)، مما يجعل أي JOIN عليه غير موثوق بالكامل. هذا الاكتشاف أثّر على قرارات التحليل اللاحقة.
